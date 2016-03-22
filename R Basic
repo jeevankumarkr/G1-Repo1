@@ -14,3 +14,11 @@ train1$'SLA %'<-ifelse(train1$'SLA %'==0, 0, train1$'SLA %'/100)
 df$new_column <- df$column1 * df$column2
 
 data.frame(lapply(df[train1$'SLA %',train1$'%Reopen Incidents', train1$'%Attrition', train1$'% of feedback'], function(X) X/100))
+
+#Join two columns and seperate it with '_' and create a new column. Also remove the column
+
+within(HC1, C <- paste(Text, Unit, sep='_'))
+
+HC2<- within(HC1, Category <- paste(Text, Unit, sep='_'))
+
+HC3 <- subset(HC2, select = -c(Text,Unit))
