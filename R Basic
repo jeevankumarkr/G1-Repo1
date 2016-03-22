@@ -1,10 +1,11 @@
+---------------------------------------------------------------------------------------------------------------------------------------
 ###Change column names:
 
 # Now you want to change "bad" and "worst" to "good" and "best". You can use
 
 colnames(train)[which(colnames(train) %in% c("bad","worst") )] <- c("good","best")
 
-
+---------------------------------------------------------------------------------------------------------------------------------------
 # Divide or Multiply a column by another column, if zero present make it NA or 0 not infinite
 
 train1$'SLA %'<-ifelse(train1$'SLA %'==0, 0, train1$'SLA %'/100)
@@ -14,7 +15,7 @@ train1$'SLA %'<-ifelse(train1$'SLA %'==0, 0, train1$'SLA %'/100)
 df$new_column <- df$column1 * df$column2
 
 data.frame(lapply(df[train1$'SLA %',train1$'%Reopen Incidents', train1$'%Attrition', train1$'% of feedback'], function(X) X/100))
-
+----------------------------------------------------------------------------------------------------------------------------------------
 #Join two columns and seperate it with '_' and create a new column. Also remove the column
 
 within(HC1, C <- paste(Text, Unit, sep='_'))
@@ -22,3 +23,22 @@ within(HC1, C <- paste(Text, Unit, sep='_'))
 HC2<- within(HC1, Category <- paste(Text, Unit, sep='_'))
 
 HC3 <- subset(HC2, select = -c(Text,Unit))
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Make the first row as the column names
+
+install.packages("data.table")
+library(data.table)
+
+## setDT helps to convert lists and data frames to Data Tables with reference
+
+tHC6<- setDT(tHC6, keep.rownames = TRUE)[]
+
+tHC6 <- sapply(tHC6, as.character)
+
+#converts first row to column header
+colnames(tHC6) <- tHC6[1, ]
+
+#remove the first row
+tHC6 <- as.data.frame(tHC6[-1,])
+
+--------------------------------------------------------------------------------------------------------------------------------------------
