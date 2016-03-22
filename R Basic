@@ -51,3 +51,14 @@ is.num <- sapply(tHC6, is.numeric)
 tHC6[is.num] <- lapply(tHC6[is.num], round, 2)
 
 -----------------------------------------------------------------------------------------------------------------------------------------
+# replace a character in a dataset using gsub
+healthdata$Total.Charges<-as.numeric(gsub("\\$","",healthdata$Total.Charges))
+
+healthdata$Total.Charges<-as.numeric(gsub("\\+","",healthdata$Total.Charges))
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Remove all special Characters from the dataset
+
+Ktrain1 <- as.data.frame(lapply(Ktrain, function(y) gsub("[[:punct:]]"," ",y)))
+
+------------------------------------------------------------------------------------------------------------------------------------------
