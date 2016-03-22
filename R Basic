@@ -1,0 +1,16 @@
+###Change column names:
+
+# Now you want to change "bad" and "worst" to "good" and "best". You can use
+
+colnames(train)[which(colnames(train) %in% c("bad","worst") )] <- c("good","best")
+
+
+# Divide or Multiply a column by another column, if zero present make it NA or 0 not infinite
+
+train1$'SLA %'<-ifelse(train1$'SLA %'==0, 0, train1$'SLA %'/100)
+
+# or
+
+df$new_column <- df$column1 * df$column2
+
+data.frame(lapply(df[train1$'SLA %',train1$'%Reopen Incidents', train1$'%Attrition', train1$'% of feedback'], function(X) X/100))
