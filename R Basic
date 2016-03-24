@@ -62,6 +62,43 @@ healthdata$Total.Charges<-as.numeric(gsub("\\+","",healthdata$Total.Charges))
 Ktrain1 <- as.data.frame(lapply(Ktrain, function(y) gsub("[[:punct:]]"," ",y)))
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+# Handling NA NA's
+
+# Mark the data that is empty or any character to NA 
+
+train_char[train_char==-1] = NA
+train_char[train_char==""] = NA
+train_char[train_char=="[]"] = NA
+
+# Find proportion of NA's in the data
+
+length(train[is.na(train)])/(ncol(train)*nrow(train))
+
+# Lets look at the number of NA's per feature type (Numeric, Character or String).
+
+num_na = sapply(train_numr, function(x) sum(is.na(x)))
+char_na = sapply(train_char, function(x) sum(is.na(x)))
+date_na = sapply(train_date, function(x) sum(is.na(x)))
+all_na = rbind(data.frame(count=num_na, type="Numerical"), 
+               data.frame(count=char_na, type="Character"), 
+               data.frame(count=date_na, type="Date"))
+
+#table(all_na)
+all_na = data.frame(all_na)
+all_na = all_na[all_na$count>0,]
+
+breaks <- c(5,10,50,100,500,1000,2000)
+
+ggplot(all_na, aes(x = count, fill=type)) +  
+  geom_histogram(alpha=0.7) + 
+#  scale_y_log10(limits=c(1,2000), breaks=breaks) + 
+  scale_x_log10(limits=c(1,20000), breaks=c(breaks,5000,10000,20000)) + 
+  labs(title="Histogram of feature count per NA count", size=24, face="bold") +
+  theme(plot.title = element_text(size = 16, face = "bold")) +
+  xlab("NA Count") + ylab("Feature Count")
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 #Imputation Impute Categorical, Numerical, Binary - In Mice Package just change the Method (CHeck for help what goes in each of it)
 
 #ref link: https://github.com/jeevankumarkr/G1-Repo1/edit/master/R%20Basic
