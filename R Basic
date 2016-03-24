@@ -116,6 +116,10 @@ apply(data,1,pMiss)
 tempData <- mice(data,m=5,maxit=50,meth='pmm',seed=500)
 summary(tempData)
 
+#If you would like to check the imputed data, for instance for the variable Ozone, you need to enter the following line of code
+
+tempData$imp$Ozone
+
 #Inspecting the distribution of original and imputed data
 
 #First of all we can use a scatterplot and plot Ozone against all the other variables
