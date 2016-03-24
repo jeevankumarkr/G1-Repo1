@@ -87,4 +87,6 @@ stripplot(tempData, pch = 20, cex = 1.2)
 
 modelFit1 <- with(tempData,lm(Temp~ Ozone+Solar.R+Wind))
 summary(pool(modelFit1))
+------------------------------------------------------------------------------------------------------------------------------------------
+
 
