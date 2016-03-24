@@ -104,6 +104,14 @@ ggplot(all_na, aes(x = count, fill=type)) +
 #ref link: https://github.com/jeevankumarkr/G1-Repo1/edit/master/R%20Basic
 #Impute Data
 library(mice)
+md.pattern(data)
+
+#See Percentage of missing data in each of column
+
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+apply(data,2,pMiss)
+apply(data,1,pMiss)
+
 
 tempData <- mice(data,m=5,maxit=50,meth='pmm',seed=500)
 summary(tempData)
