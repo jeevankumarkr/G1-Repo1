@@ -62,3 +62,29 @@ healthdata$Total.Charges<-as.numeric(gsub("\\+","",healthdata$Total.Charges))
 Ktrain1 <- as.data.frame(lapply(Ktrain, function(y) gsub("[[:punct:]]"," ",y)))
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+#Imputation Impute Categorical, Numerical, Binary - In Mice Package just change the Method (CHeck for help what goes in each of it)
+
+#ref link: https://github.com/jeevankumarkr/G1-Repo1/edit/master/R%20Basic
+#Impute Data
+library(mice)
+
+tempData <- mice(data,m=5,maxit=50,meth='pmm',seed=500)
+summary(tempData)
+
+#Inspecting the distribution of original and imputed data
+
+#First of all we can use a scatterplot and plot Ozone against all the other variables
+
+xyplot(tempData,Ozone ~ Wind+Temp+Solar.R,pch=18,cex=1)
+
+densityplot(tempData)
+
+#stripplot() function that shows the distributions of the variables as individual points
+
+stripplot(tempData, pch = 20, cex = 1.2)
+
+#The mice package makes it again very easy to fit a a model to each of the imputed dataset and then pool the results together
+
+modelFit1 <- with(tempData,lm(Temp~ Ozone+Solar.R+Wind))
+summary(pool(modelFit1))
+
