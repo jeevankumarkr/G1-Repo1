@@ -1,0 +1,55 @@
+#feature selection - lvq
+#rank features by importance
+# ensure results are repeatable
+set.seed(7)
+# prepare training scheme
+control <- trainControl(method="repeatedcv", number=10, repeats=3)
+# train the model
+model <- train(churn~., data=data, method="lvq", preProcess="scale", trControl=control)
+# estimate variable importance
+importance <- varImp(model, scale=FALSE)
+# summarize importance
+print(importance)
+# plot importance
+plot(importance)
+
+#PCA
+pca <- prcomp(data1,
+                 center = TRUE,
+                 scale. = TRUE)
+print(pca)
+
+plot(pca,type="l")
+summary(pca)
+# Predict PCs
+predict(pca, 
+        newdata=tail(data1, 2))
+
+biplot(pca)
+
+#lda
+lda <- lda(churn ~ ., 
+           data=data)
+
+prop.lda = lda$svd^2/sum(lda$svd^2) 
+
+plda <- predict(object = lda,
+                newdata = data)
+
+
+#fselector
+#info gain
+(fsel_weights <- information.gain(churn~., data))
+
+#gain ratio
+(gr_weights <- gain.ratio(churn~., data))
+
+#chisq
+(chi_weights<-chi.squared(churn~., data))
+
+#oneR
+(oner_weights <- oneR(churn~., data))
+
+#Random Forest Filter
+(rf_weights <- random.forest.importance(churn~., data, importance.type = 1))
+
