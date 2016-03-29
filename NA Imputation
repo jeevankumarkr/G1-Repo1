@@ -1,3 +1,34 @@
+# Imputation with mean / median / mode
+library(Hmisc)
+impute(BostonHousing$ptratio, mean)  # replace with mean
+impute(BostonHousing$ptratio, median)  # median
+impute(BostonHousing$ptratio, 20)  # replace specific number
+# or if you want to impute manually
+BostonHousing$ptratio[is.na(BostonHousing$ptratio)] <- mean(BostonHousing$ptratio, na.rm = T)  # not run
+
+#accuracy when imputed with mean
+library(DMwR)
+actuals <- original$ptratio[is.na(BostonHousing$ptratio)]
+predicteds <- rep(mean(BostonHousing$ptratio, na.rm=T), length(actuals))
+regr.eval(actuals, predicteds)
+
+########################################################
+#knn
+knnOutput <- knnImputation(BostonHousing[, !names(BostonHousing) %in% "medv"])  # perform knn imputation.
+anyNA(knnOutput)
+
+###########################################################################
+library(rpart)
+class_mod <- rpart(rad ~ . - medv, data=BostonHousing[!is.na(BostonHousing$rad), ], method="class", na.action=na.omit)  # since rad is a factor
+anova_mod <- rpart(ptratio ~ . - medv, data=BostonHousing[!is.na(BostonHousing$ptratio), ], method="anova", na.action=na.omit)  # since ptratio is numeric.
+rad_pred <- predict(class_mod, BostonHousing[is.na(BostonHousing$rad), ])
+ptratio_pred <- predict(anova_mod, BostonHousing[is.na(BostonHousing$ptratio), ]
+
+actuals <- original$ptratio[is.na(BostonHousing$ptratio)]
+predicteds <- ptratio_pred
+regr.eval(actuals, predicteds)
+################################################################
+#MICE
 #load data
 data <- iris
 
@@ -21,6 +52,7 @@ library(mice)
 #tabular form of missing value present in each variable
 md.pattern(iris.mis)
 
+################################################################################
 #install VIM
 install.packages("VIM")
 library(VIM)
@@ -49,6 +81,7 @@ fit <- with(data = iris.mis, exp = lm(Sepal.Width ~ Sepal.Length + Petal.Width))
 combine <- pool(fit)
 summary(combine)
 
+#############################################################################################
 #install Amelia
 install.packages("Amelia")
 library(Amelia)
@@ -68,6 +101,7 @@ amelia_fit$imputations[[5]]$Sepal.Length
 #export the outputs to csv files
 write.amelia(amelia_fit, file.stem = "imputed_data_set")
 
+#############################################################################
 #missForest
 install.packages("missForest")
 library(missForest)
@@ -85,6 +119,7 @@ iris.imp$OOBerror
 iris.err <- mixError(iris.imp$ximp, iris.mis, iris)
 iris.err
 
+#############################################################################
 #install package and load library
 install.packages("Hmisc")
 library(Hmisc)
@@ -106,6 +141,7 @@ impute_arg
 #check imputed variable Sepal.Length
 impute_arg$imputed$Sepal.Length
 
+#########################################################################################
 #install package and load library
 install.packages("Hmisc")
 library(Hmisc)
