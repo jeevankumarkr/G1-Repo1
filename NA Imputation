@@ -1,0 +1,116 @@
+#load data
+data <- iris
+
+#Get summary
+summary(iris)
+
+#Generate 10% missing values at Random 
+iris.mis <- prodNA(iris, noNA = 0.1)
+
+#Check missing values introduced in the data
+summary(iris.mis)
+
+#remove categorical variables
+iris.mis <- subset(iris.mis, select = -c(Species))
+summary(iris.mis)
+
+#install MICE
+install.packages("mice")
+library(mice)
+
+#tabular form of missing value present in each variable
+md.pattern(iris.mis)
+
+#install VIM
+install.packages("VIM")
+library(VIM)
+mice_plot <- aggr(iris.mis, col=c('navyblue','yellow'),
+                    numbers=TRUE, sortVars=TRUE,
+                    labels=names(iris.mis), cex.axis=.7,
+                    gap=3, ylab=c("Missing data","Pattern"))
+                    
+imputed_Data <- mice(iris.mis, m=5, maxit = 50, method = 'pmm', seed = 500)
+summary(imputed_Data)
+
+#m  – Refers to 5 imputed data sets
+#maxit – Refers to no. of iterations taken to impute missing values
+#method – Refers to method used in imputation. we used predictive mean matching.
+
+#check imputed values
+imputed_Data$imp$Sepal.Width
+
+#get complete data ( 2nd out of 5)
+completeData <- complete(imputed_Data,2)
+
+#build predictive model
+fit <- with(data = iris.mis, exp = lm(Sepal.Width ~ Sepal.Length + Petal.Width)) 
+
+#combine results of all 5 models
+combine <- pool(fit)
+summary(combine)
+
+#install Amelia
+install.packages("Amelia")
+library(Amelia)
+
+#specify columns and run amelia
+amelia_fit <- amelia(iris.mis, m=5, parallel = "multicore", noms = "Species")
+
+#access imputed outputs
+amelia_fit$imputations[[1]]
+amelia_fit$imputations[[2]]
+amelia_fit$imputations[[3]]
+amelia_fit$imputations[[4]]
+amelia_fit$imputations[[5]]
+
+amelia_fit$imputations[[5]]$Sepal.Length
+
+#export the outputs to csv files
+write.amelia(amelia_fit, file.stem = "imputed_data_set")
+
+#missForest
+install.packages("missForest")
+library(missForest)
+
+#impute missing values, using all parameters as default values
+iris.imp <- missForest(iris.mis)
+
+#check imputed values
+iris.imp$ximp
+
+#check imputation error
+iris.imp$OOBerror
+
+#comparing actual data accuracy
+iris.err <- mixError(iris.imp$ximp, iris.mis, iris)
+iris.err
+
+#install package and load library
+install.packages("Hmisc")
+library(Hmisc)
+
+# impute with mean value
+iris.mis$imputed_age <- with(iris.mis, impute(Sepal.Length, mean))
+
+# impute with random value
+iris.mis$imputed_age2 <- with(iris.mis, impute(Sepal.Length, 'random'))
+
+#similarly you can use min, max, median to impute missing value
+
+#using argImpute
+impute_arg <- aregImpute(~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width + 
+                          Species, data = iris.mis, n.impute=5)
+                          
+impute_arg
+
+#check imputed variable Sepal.Length
+impute_arg$imputed$Sepal.Length
+
+#install package and load library
+install.packages("Hmisc")
+library(Hmisc)
+
+#imputing missing value with mi
+mi_data <- mi(iris.mis, seed = 335)
+summary(mi_data)
+
