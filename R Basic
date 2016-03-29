@@ -6,6 +6,13 @@
 colnames(train)[which(colnames(train) %in% c("bad","worst") )] <- c("good","best")
 
 ---------------------------------------------------------------------------------------------------------------------------------------
+# Correlation through Heat Map
+
+library(ggplot2)
+library(reshape2)
+qplot(x=Var1, y=Var2, data=melt(cor(reg_Data1[,-2])), fill=value, geom="tile")
+
+---------------------------------------------------------------------------------------------------------------------------------------
 # Divide or Multiply a column by another column, if zero present make it NA or 0 not infinite
 
 train1$'SLA %'<-ifelse(train1$'SLA %'==0, 0, train1$'SLA %'/100)
