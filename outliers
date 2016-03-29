@@ -25,4 +25,12 @@ boxplot(y)
 identify(rep(1, length(y)), y, labels = seq_along(y))
 
 ####################################################################
+library(outliers)
+set.seed(1234)
+x = rnorm(10)
+outs <- scores(x, type="chisq", prob=0.9)
+x[outs]
 
+#http://r-statistics.co/Outlier-Treatment-With-R.html#outliers%20package
+
+#outlier treatmeant: 1. Imputation 2. Capping 3. Prediction
