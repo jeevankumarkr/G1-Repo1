@@ -1,0 +1,28 @@
+#boxplot
+# load data
+data("iris")
+
+# names of variables
+names(iris)
+
+# build the box plot
+boxplot(iris$Sepal.Length, main="Box plot", ylab="Sepal Length")
+
+# build the box plot
+boxplot(Sepal.Length ~ Species, data=iris,
+     main="Box Plot",
+     xlab="Species",
+     ylab="Sepal Length")
+
+outliers<-boxplot.stats(data$Sepal.Length)$out
+sort(outliers)
+quantile(data$Sepal.Length,c(.05,.95))
+####################################################################
+#identify
+set.seed(482)
+y <- rnorm(100)
+boxplot(y)
+identify(rep(1, length(y)), y, labels = seq_along(y))
+
+####################################################################
+
