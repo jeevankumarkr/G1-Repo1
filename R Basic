@@ -145,4 +145,16 @@ modelFit1 <- with(tempData,lm(Temp~ Ozone+Solar.R+Wind))
 summary(pool(modelFit1))
 ------------------------------------------------------------------------------------------------------------------------------------------
 
+## How to import worksheet or tab from Excel sheet and Merge data
 
+# Read the first file
+library(xlsx)
+library(XLConnect)
+
+df = readWorksheetFromFile(file="Andreas_GAS Histroy Data.xlsx", sheet=1)
+
+# Loop through the remaining files and merge them to the existing data frame
+for (i in getSheets(loadWorkbook("Andreas_GAS Histroy Data.xlsx"))) {
+  newFile = readWorksheetFromFile(file="Andreas_GAS Histroy Data.xlsx", sheet=i)
+  df = merge(df, newFile, all=TRUE)
+}
