@@ -172,5 +172,13 @@ comparison <- compare(df2,df, allowAll=TRUE)
 comparison
 -----------------------------------------------------------------------------------------------------------------------------------------
 
+Aggregate rows based on class - Aggregate multiple rows - 
+
+ag <- aggregate(. ~ GAS.KPI.Overview.., df, sum)
+
+# It aggregated data based on column values in GAS.KPI..... for dataframe df and with function sum, all data should be numeric
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
 
 
