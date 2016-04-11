@@ -1,3 +1,7 @@
+# Change variable type - change variable type for few columns
+
+df2[2:39] <- as.data.frame(sapply(df2[2:39], as.numeric))
+
 ---------------------------------------------------------------------------------------------------------------------------------------
 ###Change column names:
 
@@ -158,3 +162,15 @@ for (i in getSheets(loadWorkbook("Andreas_GAS Histroy Data.xlsx"))) {
   newFile = readWorksheetFromFile(file="Andreas_GAS Histroy Data.xlsx", sheet=i)
   df = merge(df, newFile, all=TRUE)
 }
+----------------------------------------------------------------------------------------------------------------------------------------
+### Compare two data frames - similarty between two data frames
+
+library(compare)
+
+comparison <- compare(df2,df, allowAll=TRUE)
+
+comparison
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
