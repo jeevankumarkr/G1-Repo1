@@ -179,6 +179,15 @@ ag <- aggregate(. ~ GAS.KPI.Overview.., df, sum)
 # It aggregated data based on column values in GAS.KPI..... for dataframe df and with function sum, all data should be numeric
 
 ---------------------------------------------------------------------------------------------------------------------------------------
+#Convert Scientific or exponential to numeric
+
+options(scipen=0)
+options(scipen = 15, digits = 15)
+options(scipen = 15, digits = 15)
+write.csv(train3, "train3.csv")  
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 
