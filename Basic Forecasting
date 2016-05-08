@@ -1,0 +1,151 @@
+# Forecasting with Linear Regression 
+
+data <- read.csv("train5.csv") 
+
+data1<- data[,c("Active.headcount","X..Incidents.Closed." ,"Apps.supported" , "User...HC" , "Users.supported")]
+
+
+# Make the Y as time series...use the start and end to define the horizon
+
+hc.ts <- ts(data1$Active.headcount, start = c(2013,1), end = c(2016, 2), freq = 12) 
+
+# To forecast with trend, create a time series component t with your x variables where it will be your index
+
+
+
+colnames(a)[1] <- "t"
+
+#Combine with dataset
+
+data2 <- cbind(data1,a)
+
+trend <- data2[2:6]
+
+write.csv(trend, "tred.csv")
+
+#like trend, if needed seasonality create seasons in your x (ex: add a column jan, feb march etc)
+
+season <- read.csv("season.csv")
+
+
+nValid <- 20 
+nTrain <- length(hc.ts) - nValid 
+
+#Create a window for the time series
+
+train.ts <- window(hc.ts, start = c(2013, 1), end = c(2015, 12)) 
+
+# Model with only Trend
+
+train.lm <- tslm(train.ts ~ trend) 
+
+# Model with only Seasonality
+
+train.lm <- tslm(train.ts ~ season) 
+
+
+
+train.lm.pred <- forecast(train.lm, h = 6, level = 0) 
+
+plot(train.ts, xlab = "Time", ylab = "HC", ylim = c(120, 300), bty = "l") 
+lines(train.lm$fitted, lwd = 2)
+
+summary(train.lm)
+
+accuracy(train.lm)
+
+#trend and seasonality
+
+train.lm <- tslm(train.ts ~ trend + season) 
+
+
+
+train.lm.pred <- forecast(train.lm, h = 6, level = 0)
+
+forecastvalues <- as.data.frame(train.lm.pred)
+
+
+
+
+
+
+plot(train.lm.pred, ylim = c(120, 200), ylab = "HC", xlab = "Time", bty = "l",col = "red") 
+axis(10, at = seq(month.name,month.name,1), labels = format(seq(month.name, month.name,1))) 
+lines(train.lm.pred$fitted, lwd = 2, col = "blue") 
+
+valid.ts <- window(hc.ts, start = c(2013, nTrain + 1), end = c(2016, 2)) 
+
+lines(valid.ts,col = "red")
+
+accuracy(train.lm.pred$mean, valid.ts)
+
+
+forecastLM <- function(x, n.ahead = 6) 
+{ 
+fit.arima <- tslm(train.ts ~ trend + season)
+fore <- forecast(fit.arima, h = n.ahead)
+plot(fore)
+upper <- fore$upper[, "95%"]
+lower <- fore$lower[, "95%"]
+trend <- as.numeric(fore$fitted)
+pred <- as.numeric(fore$mean)
+output <- data.frame(actual = c(x$Actual.headcount, rep(NA, n.ahead)), trend = c(trend, rep(NA, n.ahead)), pred = c(rep(NA,nrow(x)), pred), lower = c(rep(NA, nrow(x)), lower), upper = c(rep(NA, nrow(x)), upper), date = c(x$Date, max(x$Date) + (1:n.ahead)))
+return(output) }
+
+plotForecastResult <- function(x, title = NULL) {
+  x <- x[order(x$date), ]
+  max.val <- max(c(x$actual, x$upper), na.rm = T)
+  min.val <- min(c(x$actual, x$lower), na.rm = T)
+  plot(x$date, x$actual, type = "l", col = "grey", main = title, 
+       xlab = "Time", ylab = "Exchange Rate", xlim = range(x$date), 
+       ylim = c(min.val, max.val))
+  grid()
+  lines(x$date, x$trend, col = "yellowgreen")
+  lines(x$date, x$pred, col = "green")
+  lines(x$date, x$lower, col = "blue")
+  lines(x$date, x$upper, col = "blue")
+  legend("bottomleft", col = c("grey", "yellowgreen", "green", 
+                               "blue"), lty = 1, c("Actual", "Trend", "Forecast", "Lower/Upper Bound"))
+}
+plotForecastResult
+
+
+
+result.arima <- forecastLM(data2, n.ahead = 6)
+
+plotForecastResult(result.arima, title = "Exchange rate forecasting with ARIMA")
+
+
+
+summary(hc.lm)
+
+
+
+?tslm
+
+
+license.lm.pred <- forecast(license.lm, h = 55, level = 0) 
+plot(license.lm.pred, ylim = c(300, 2600), ylab = "license", xlab = "Time", bty = "l", xaxt = "n", xlim = c(2015,2016.36), main ="", flty = 2) 
+axis(1, at = seq(2015, 2016, 1), labels = format(seq(2015, 2016, 1))) 
+lines(license.lm$fitted, lwd = 2) 
+valid.ts <- window(license.ts, start = c(2015, nTrain + 1), end = c(2016, nTrain + 55)) 
+accuracy(license.lm.pred$mean, valid.ts)
+
+
+train.lm <- tslm(train.ts ~ trend) plot(train.ts, xlab = "Time", ylab = "Ridership", ylim = c(1300, 2300), bty = "l") lines(train.lm$fitted, lwd = 2)
+
+
+plot(hc.ts, xlab = "Ridership", ylab = "Time", ylim = c(120, 200), bty = "l")
+
+install.packages("forecast") 
+library(forecast) 
+trend <- c(1:38)
+hc.lm <- tslm(hc.ts ~ poly(trend, 2)) 
+
+par(mfrow = c(2, 1)) 
+
+plot(hc.ts, xlab = "Time", ylab = "Head Count", ylim = c(120, 180), bty = "l")
+lines(hc.lm$fitted, lwd = 2)
+tc.ts.zoom <- window(hc.ts, start = c(2013,1), end = c(2016, 2))
+plot(tc.ts.zoom, xlab = "Time", ylab = "Head Count", ylim = c(120, 180), bty = "l")
+
