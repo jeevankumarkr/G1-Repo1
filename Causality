@@ -1,0 +1,57 @@
+Thurman<-read.table("eggs.txt", header=T) 
+year<-Thurman$year 
+egg<-Thurman$egg 
+chic<-Thurman$chic
+
+par(mfrow=c(2,1))
+plot.ts(chic)
+plot.ts(egg)
+
+library(forecast)
+# test for unit root and number of differences required, you can also test for seasonality with nsdiffs
+ndiffs(chic, alpha = o.05, test = c("kpss"))
+ndiffs(egg, alpha=0.05, test=c(“kpss”))
+
+# differenced time series
+dchick <- diff(chic)
+degg <- diff(egg)
+plot.ts(dchick)
+plot.ts(degg)
+
+# do eggs granger cause chickens?
+
+grangertest(dchick ~ degg, order=4)
+
+'''from the result below we can say eggs granger cause chickens
+Highly significant p-value, but what about the other direction?
+
+
+Granger causality test
+
+Model 1: dchick ~ Lags(dchick, 1:4) + Lags(degg, 1:4)
+Model 2: dchick ~ Lags(dchick, 1:4)
+Res.Df Df      F   Pr(>F)   
+1     63                      
+2     67 -4 4.5202 0.002836 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+'''
+
+# do chickens granger cause eggs, at lag 4?
+ grangertest(degg ~ dchick, order=4)
+'''
+
+from the below result we can say chicks do not granger cause eggs as p value is not significant
+
+Granger causality test
+
+Model 1: degg ~ Lags(degg, 1:4) + Lags(dchick, 1:4)
+Model 2: degg ~ Lags(degg, 1:4)
+Res.Df Df      F Pr(>F)
+1     63                 
+2     67 -4 0.1585 0.9584
+
+
+
+library(lmtest)
