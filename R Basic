@@ -188,6 +188,10 @@ write.csv(train3, "train3.csv")
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
-
+merge(x=inactive, y=user, by.x="SMTP", by.y="Email", all.x = TRUE)
+Inner join:	merge(df1, df2, by=”common_key_column”)
+Outer join:	merge(df1, df2, by=”common_key_column”, all=TRUE)
+Left outer:	merge(df1, df2, by=”common_key_column”, all.x=TRUE)
+Right outer:	merge(df1, df2, by=”common_key_column”, all.y=TRUE)
 
 
