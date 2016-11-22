@@ -53,3 +53,69 @@ plda <- predict(object = lda,
 #Random Forest Filter
 (rf_weights <- random.forest.importance(churn~., data, importance.type = 1))
 
+
+## Remove highly correlated reduntant features through caret package
+
+# ensure the results are repeatable
+set.seed(12345)
+# load the library
+library(mlbench)
+library(caret)
+# load the data
+data(PimaIndiansDiabetes)
+# calculate correlation matrix
+correlationMatrix <- cor(PimaIndiansDiabetes[,1:8])
+# summarize the correlation matrix
+print(correlationMatrix)
+# find attributes that are highly corrected (ideally >0.75)
+highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
+# print indexes of highly correlated attributes
+print(highlyCorrelated)
+
+
+## Automatically select features by through recursive feature elimination
+
+# load the library
+library(mlbench)
+library(caret)
+# load the data
+data(PimaIndiansDiabetes)
+# define the control using a random forest selection function
+control <- rfeControl(functions=rfFuncs, method="cv", number=10)
+# run the RFE algorithm
+results <- rfe(PimaIndiansDiabetes[,1:8], PimaIndiansDiabetes[,9], sizes=c(1:8), rfeControl=control)
+# summarize the results
+print(results)
+# list the chosen features
+predictors(results)
+# plot the results
+plot(results, type=c("g", "o"))
+
+
+## Feature selection using Lasso
+
+library(glmnet)
+x <- as.matrix(data.frame(age, bmi_p, xfactors)) # have all the x values as matrix
+
+#note alpha =1 for lasso only and can blend with ridge penalty down to alpha=0 ridge only
+glmmod<-glmnet(x,y=as.factor(asthma),alpha=1,family='binomial')
+
+#plot variable coefficients vs. shrinkage parameter lambda.
+plot(glmmod,xvar="lambda")
+grid()
+
+> glmmod
+
+#coefficents can be extracted from the glmmod. Here shown with 3 variables selected.
+     > coef(glmmod)[,10]
+     
+#Cross validation can also be used to select lambda.
+
+cv.glmmod <- cv.glmnet(x,y=asthma,alpha=1)
+plot(cv.glmmod)
+best_lambda <- cv.glmmod$lambda.min
+
+> best_lambda 
+#[1] 0.2732972
+
+
