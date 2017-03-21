@@ -59,6 +59,11 @@ warning(1)
 
 length(train[is.na(train)])/(ncol(train)*nrow(train)) 
 
+# Find NA count in each of the columns
+
+apply(train, 2, function(x) sum(is.na(x)))
+
+
 # Check for dupicate rows.
 
 nrow(train) - nrow(unique(train))
