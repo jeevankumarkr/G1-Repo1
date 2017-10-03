@@ -68,6 +68,13 @@ healthdata$Total.Charges<-as.numeric(gsub("\\$","",healthdata$Total.Charges))
 healthdata$Total.Charges<-as.numeric(gsub("\\+","",healthdata$Total.Charges))
 
 -----------------------------------------------------------------------------------------------------------------------------------------
+#remove last two charaters from every row in a column
+
+train$entered <- gsub('.{2}$', '', train$entered)
+
+a$data = substr(a$data,1,nchar(a$data)-3)
+----------------------------------------------------------------------------------------------------------------------------------------
+
 # Remove all special Characters from the dataset
 
 Ktrain1 <- as.data.frame(lapply(Ktrain, function(y) gsub("[[:punct:]]"," ",y)))
