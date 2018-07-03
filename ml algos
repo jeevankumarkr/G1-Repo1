@@ -1,4 +1,16 @@
 #Load Train and Test datasets
+
+# Random sample indexes
+train_index <- sample(1:nrow(df), 0.8 * nrow(df))
+test_index <- setdiff(1:nrow(df), train_index)
+
+# Build X_train, y_train, X_test, y_test
+X_train <- df[train_index, -15]
+y_train <- df[train_index, "income"]
+
+X_test <- df[test_index, -15]
+y_test <- df[test_index, "income"]
+
 #Identify feature and response variable(s) and
 #values must be numeric and numpy arrays
 x_train <- input_variables_values_training_datasets
