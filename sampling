@@ -1,0 +1,10 @@
+Random sample indexes
+train_index <- sample(1:nrow(adult), 0.8 * nrow(adult))
+test_index <- setdiff(1:nrow(adult), train_index)
+
+# Build X_train, y_train, X_test, y_test
+X_train <- adult[train_index, -15]
+y_train <- adult[train_index, "income"]
+
+X_test <- adult[test_index, -15]
+y_test <- adult[test_index, "income"]
