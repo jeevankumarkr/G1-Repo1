@@ -1,3 +1,12 @@
+#replace factor levels
+
+library(plyr)
+log2$V2 <- revalue(log2$V2, c("Jan"="1", "Feb"="2", "Mar"="3", "Apr"="4","May"="5", "Jun"="6",
+                   "Jul"="7", "Aug"="8", "Sep"="9", "Oct"="10","Nov"="11", "Dec"="12"))
+
+#########################################################################################################################################
+
+
 # Change variable type - change variable type for few columns
 
 df2[2:39] <- as.data.frame(sapply(df2[2:39], as.numeric))
