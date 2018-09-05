@@ -1,3 +1,11 @@
+#stratified random sampling
+
+#pick sample per color 3 records from df
+
+df %>% group_by(color) %>% sample_n(size = 3)
+
+
+
 Random sample indexes
 train_index <- sample(1:nrow(adult), 0.8 * nrow(adult))
 test_index <- setdiff(1:nrow(adult), train_index)
